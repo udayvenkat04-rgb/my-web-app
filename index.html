@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneSignal Web Push Demo</title>
+  <link rel="stylesheet" href="assets/style.css">
+
+  <!-- OneSignal SDK -->
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function() {
+        OneSignal.init({
+          appId: "76443416-6742-4c31-b806-916bc5e5085f", // OneSignal App ID added
+          notifyButton: {
+            enable: true, // Adds a bell widget to subscribe
+          },
+        });
+    });
+  </script>
+</head>
+<body>
+  <h1>Welcome to My Web App 🚀</h1>
+  <button onclick="OneSignal.showNativePrompt()">Subscribe to Notifications</button>
+  <script src="assets/app.js"></script>
+</body>
+</html>
