@@ -3,26 +3,34 @@ document.addEventListener('DOMContentLoaded', function() {
 	const sampleNotifyBtn = document.getElementById('sampleNotifyBtn');
 	if (sampleNotifyBtn) {
 		sampleNotifyBtn.addEventListener('click', function() {
-			// Check for notification permission
-			if (Notification.permission === 'granted') {
-				new Notification('Sample Notification', {
-					body: 'This is a demo notification for all users!',
-					icon: 'favicon.ico'
-				});
-			} else if (Notification.permission !== 'denied') {
-				Notification.requestPermission().then(function(permission) {
-					if (permission === 'granted') {
-						new Notification('Sample Notification', {
-							body: 'This is a demo notification for all users!',
-							icon: 'favicon.ico'
-						});
-					} else {
-						alert('Notification permission denied.');
-					}
-				});
-			} else {
-				alert('Notification permission denied.');
-			}
+			// Send a real push notification using OneSignal REST API
+			const appId = '76443416-6742-4c31-b806-916bc5e5085f';
+			const restApiKey = 'bqypjazgguc5mrynvpjwdawa4';
+			fetch('https://onesignal.com/api/v1/notifications', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Basic ' + restApiKey
+				},
+				body: JSON.stringify({
+					app_id: appId,
+					included_segments: ['All'],
+					headings: { en: 'Sample Notification' },
+					contents: { en: 'This is a demo notification for all users!' },
+					url: window.location.origin
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.errors) {
+					alert('Failed to send notification: ' + JSON.stringify(data.errors));
+				} else {
+					alert('Push notification sent to all subscribed users!');
+				}
+			})
+			.catch(error => {
+				alert('Error sending notification: ' + error);
+			});
 		});
 	}
 });
