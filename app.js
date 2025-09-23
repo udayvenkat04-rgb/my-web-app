@@ -1,4 +1,31 @@
-
+// Show a sample notification when the button is clicked
+document.addEventListener('DOMContentLoaded', function() {
+	const sampleNotifyBtn = document.getElementById('sampleNotifyBtn');
+	if (sampleNotifyBtn) {
+		sampleNotifyBtn.addEventListener('click', function() {
+			// Check for notification permission
+			if (Notification.permission === 'granted') {
+				new Notification('Sample Notification', {
+					body: 'This is a demo notification for all users!',
+					icon: 'favicon.ico'
+				});
+			} else if (Notification.permission !== 'denied') {
+				Notification.requestPermission().then(function(permission) {
+					if (permission === 'granted') {
+						new Notification('Sample Notification', {
+							body: 'This is a demo notification for all users!',
+							icon: 'favicon.ico'
+						});
+					} else {
+						alert('Notification permission denied.');
+					}
+				});
+			} else {
+				alert('Notification permission denied.');
+			}
+		});
+	}
+});
 
 console.log("Web app with OneSignal push notifications loaded!");
 
@@ -25,5 +52,4 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 });
-
 
