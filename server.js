@@ -1,46 +1,45 @@
-// server.js
-// Simple Node.js backend to send OneSignal push notifications
-
-const express = require('express');
-const bodyParser = require('body-parser');
-const fetch = require('node-fetch');
+const express = require("express");
+const bodyParser = require("body-parser");
+const axios = require("axios");
+const cors = require("cors");
 
 const app = express();
-const PORT = 3000;
-
-// Replace with your OneSignal App ID and REST API Key
-const ONESIGNAL_APP_ID = '76443416-6742-4c31-b806-916bc5e5085f';
-const ONESIGNAL_REST_API_KEY = 'bqypjazgguc5mrynvpjwdawa4';
-
+app.use(cors());
 app.use(bodyParser.json());
 
-app.post('/send-notification', async (req, res) => {
+// 🔹 Replace with your OneSignal keys
+const ONESIGNAL_APP_ID = "76443416-6742-4c31-b806-916bc5e5085f";
+const REST_API_KEY = "bqypjazgguc5mrynvpjwdawa4";
+
+// ✅ Send notification to all users
+app.post("/send-notification", async (req, res) => {
+  const { title, message } = req.body;
+
   try {
-    const { title, message, url } = req.body;
-    const response = await fetch('https://onesignal.com/api/v1/notifications', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + ONESIGNAL_REST_API_KEY
-      },
-      body: JSON.stringify({
+    const response = await axios.post(
+      "https://onesignal.com/api/v1/notifications",
+      {
         app_id: ONESIGNAL_APP_ID,
-        included_segments: ['All'],
-        headings: { en: title || 'Sample Notification' },
-        contents: { en: message || 'This is a demo notification for all users!' },
-        url: url || 'https://yourdomain.com'
-      })
-    });
-    const data = await response.json();
-    if (data.errors) {
-      return res.status(400).json({ success: false, errors: data.errors });
-    }
-    res.json({ success: true, data });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+        included_segments: ["All"], // Sends to ALL subscribers
+        headings: { en: title },
+        contents: { en: message },
+      },
+      {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          Authorization: `Basic ${REST_API_KEY}`,
+        },
+      }
+    );
+
+    res.json({ success: true, data: response.data });
+  } catch (err) {
+    console.error("Error sending notification:", err.message);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+// ✅ Run server
+app.listen(3000, () => {
+  console.log("🚀 Backend running on http://localhost:3000");
 });
