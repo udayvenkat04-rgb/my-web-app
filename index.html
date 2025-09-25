@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OneSignal Push Demo</title>
-
-  <!-- OneSignal SDK -->
   <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
   <script>
     window.OneSignal = window.OneSignal || [];
-    OneSignal.push(function () {
+    OneSignal.push(function() {
       OneSignal.init({
-        appId: "YOUR-ONESIGNAL-APP-ID", // Replace with your App ID
-        notifyButton: { enable: true }, // Shows bell widget
+        appId: "76443416-6742-4c31-b806-916bc5e5085f",  // Your OneSignal App ID
+        notifyButton: {
+          enable: true,
+        },
       });
     });
 
-    // ✅ Call backend to send push
+    // ✅ Function to call backend API
     async function sendNotification() {
       const title = document.getElementById("title").value;
       const message = document.getElementById("message").value;
@@ -28,14 +28,14 @@
       });
 
       const result = await response.json();
-      alert(result.success ? "Notification Sent ✅" : "Failed ❌");
+      alert("Notification Status: " + (result.success ? "Sent ✅" : "Failed ❌"));
     }
   </script>
 </head>
 <body>
-  <h1>🚀 OneSignal Push Notification Demo</h1>
-  <input type="text" id="title" placeholder="Enter title" /><br /><br />
-  <input type="text" id="message" placeholder="Enter message" /><br /><br />
+  <h1>🚀 OneSignal Push Demo</h1>
+  <input type="text" id="title" placeholder="Notification Title" /><br><br>
+  <input type="text" id="message" placeholder="Notification Message" /><br><br>
   <button onclick="sendNotification()">Send Notification</button>
 </body>
 </html>
